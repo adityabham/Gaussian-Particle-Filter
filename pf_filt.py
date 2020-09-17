@@ -18,8 +18,6 @@ def create_particles(N, x, y):
 def predict(particles, control_input, std, dt):
     num_of_particles = len(particles)
 
-    # Headings
-
     xdist = (control_input[0] * dt) + (randn(num_of_particles) * std[0])
     ydist = (control_input[1] * dt) + (randn(num_of_particles) * std[1])
 
