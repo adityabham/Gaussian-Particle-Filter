@@ -32,6 +32,16 @@ for iteration in range(num_of_iterations):
     pf.update(particles=particles, weights=weights, observation=observation, sensor_std=sensor_std,
               landmarks=landmarks)
 
+    # fig = plt.figure()
+    # ax = fig.add_subplot(111, projection='3d')
+    # ax.scatter(particles[:, 0], particles[:, 1], weights, marker='o', color='orange')
+    #
+    # ax.set_xlabel('Part X')
+    # ax.set_ylabel('Part Y')
+    # ax.set_zlabel('Weights')
+    #
+    # plt.show()
+
     mean = pf.estimate(particles, weights)
     p1 = plt.scatter(robot_position[0], robot_position[1], marker='+',
                      color='k', s=180, lw=3)
@@ -39,12 +49,13 @@ for iteration in range(num_of_iterations):
 
     # Initial Resample
     if pf.effective_particles(weights) < N / 2:
+        print('Resampling... %s' % iteration)
         indexes = systematic_resample(weights)
         pf.resample(particles, weights, indexes)
 
-    # print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
+    # pf.gaussian_process_reg(particles, weights)
+
+    print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
 plt.legend([p1, p2], ['Actual', 'PF'], loc=4, numpoints=1)
 plt.show()
-
-

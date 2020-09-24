@@ -38,20 +38,22 @@ def update(particles, weights, observation, sensor_std, landmarks):
     weights /= sum(weights)  # normalize
 
 
-def gaussian_process_reg(x, y):
+def gaussian_process_reg(particles, weights):
     kernel = 1.0 * RBF(1.0)
     gp = GaussianProcessRegressor(kernel=kernel, random_state=0)
-    gp.fit(x, y)
-    y_mean = gp.predict(x, return_std=True)
-    return y_mean
+    gp.fit(particles, weights)
+
+    gp_weights, sigma = gp.predict(particles, return_std=True)
+    weights[:] = gp_weights[:]
+
     # fig = plt.figure()
     # ax = fig.add_subplot(111, projection='3d')
     # ax.scatter(x[:, 0], x[:, 1], y_mean, marker='o', color='orange')
     #
-    # ax.set_xlabel('Part X ')
+    # ax.set_xlabel('Part X')
     # ax.set_ylabel('Part Y')
     # ax.set_zlabel('Weights')
-
+    #
     # plt.show()
 
 
