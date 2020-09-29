@@ -32,15 +32,7 @@ for iteration in range(num_of_iterations):
     pf.update(particles=particles, weights=weights, observation=observation, sensor_std=sensor_std,
               landmarks=landmarks)
 
-    # fig = plt.figure()
-    # ax = fig.add_subplot(111, projection='3d')
-    # ax.scatter(particles[:, 0], particles[:, 1], weights, marker='o', color='orange')
-    #
-    # ax.set_xlabel('Part X')
-    # ax.set_ylabel('Part Y')
-    # ax.set_zlabel('Weights')
-    #
-    # plt.show()
+    # pf.particle_vis(particles, weights)
 
     mean = pf.estimate(particles, weights)
     p1 = plt.scatter(robot_position[0], robot_position[1], marker='+',

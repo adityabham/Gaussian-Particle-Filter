@@ -66,3 +66,13 @@ def gaussian_process_reg(particles, weights):
     weights[:] = gp_weights[:]
 
 
+def particle_vis(particles, weights):
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(particles[:, 0], particles[:, 1], weights, marker='o', color='orange')
+
+    ax.set_xlabel('Part X')
+    ax.set_ylabel('Part Y')
+    ax.set_zlabel('Weights')
+
+    plt.show()
