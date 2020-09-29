@@ -48,12 +48,12 @@ for iteration in range(num_of_iterations):
     p2 = plt.scatter(mean[0], mean[1], marker='s', color='r')
 
     # Initial Resample
-    if pf.effective_particles(weights) < N / 2:
-        print('Resampling... %s' % iteration)
-        indexes = systematic_resample(weights)
-        pf.resample(particles, weights, indexes)
+    # if pf.effective_particles(weights) < N / 2:
+    #     print('Resampling... %s' % iteration)
+    #     indexes = systematic_resample(weights)
+    #     pf.resample(particles, weights, indexes)
 
-    # pf.gaussian_process_reg(particles, weights)
+    pf.gaussian_process_reg(particles, weights)
 
     print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 

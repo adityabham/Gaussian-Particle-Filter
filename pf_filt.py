@@ -38,25 +38,6 @@ def update(particles, weights, observation, sensor_std, landmarks):
     weights /= sum(weights)  # normalize
 
 
-def gaussian_process_reg(particles, weights):
-    kernel = 1.0 * RBF(1.0)
-    gp = GaussianProcessRegressor(kernel=kernel, random_state=0)
-    gp.fit(particles, weights)
-
-    gp_weights, sigma = gp.predict(particles, return_std=True)
-    weights[:] = gp_weights[:]
-
-    # fig = plt.figure()
-    # ax = fig.add_subplot(111, projection='3d')
-    # ax.scatter(x[:, 0], x[:, 1], y_mean, marker='o', color='orange')
-    #
-    # ax.set_xlabel('Part X')
-    # ax.set_ylabel('Part Y')
-    # ax.set_zlabel('Weights')
-    #
-    # plt.show()
-
-
 def effective_particles(gp_weights):
     return 1. / np.sum(np.square(gp_weights))
 
@@ -70,3 +51,18 @@ def resample(particles, weights, indexes):
     particles[:] = particles[indexes]
     weights[:] = weights[indexes]
     weights.fill(1.0 / len(weights))
+
+
+def gaussian_process_reg(particles, weights):
+    kernel = 1.0 * RBF(1.0)
+    gp = GaussianProcessRegressor(kernel=kernel, random_state=0)
+    gp.fit(particles, weights)
+
+    sampled_weights_array = gp.sample_y(particles)
+    gp_weights = []
+    for item in sampled_weights_array:
+        gp_weights.append(item[0])
+
+    weights[:] = gp_weights[:]
+
+
