@@ -4,38 +4,40 @@ from numpy.linalg import norm
 import scipy.stats
 from sklearn.gaussian_process import GaussianProcessRegressor
 from sklearn.gaussian_process.kernels import RBF
-from matplotlib import pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
 
 
 def create_particles(N, x, y):
+    # Create a set of Particles
+
     particles = np.empty((N, 2))
     particles[:, 0] = uniform(x[0], x[1], size=N)
     particles[:, 1] = uniform(y[0], y[1], size=N)
     return particles
 
 
-def predict(particles, control_input, std, dt):
-    num_of_particles = len(particles)
+def predict(particles, std, dt):
+    # Propagate particles forward one time step accounting for standard deviation
 
-    xdist = (control_input[0] * dt) + (randn(num_of_particles) * std[0])
-    ydist = (control_input[1] * dt) + (randn(num_of_particles) * std[1])
+    x = dt + (randn(len(particles)) * std[0])
+    y = dt + (randn(len(particles)) * std[1])
 
-    particles[:, 0] += xdist
-    particles[:, 1] += ydist
+    particles[:, 0] += x
+    particles[:, 1] += y
 
 
-def update(particles, weights, observation, sensor_std, landmarks):
+def update(particles, weights, observation, known_locations):
+    # Update particle weights based on observations
+
     weights.fill(1.)
 
-    for i, landmark in enumerate(landmarks):
-        distance = norm(particles[:, 0:2] - landmark, axis=1)
+    for i, known_locations in enumerate(known_locations):
+        diff = norm(particles[:, 0:2] - known_locations, axis=1)
         pdf_in = observation[i]
-        pdfs = scipy.stats.norm(distance, sensor_std).pdf(pdf_in)
+        pdfs = scipy.stats.norm(diff).pdf(pdf_in)
         weights *= pdfs
 
     weights += 1.e-300
-    weights /= sum(weights)  # normalize
+    weights /= sum(weights)
 
 
 def effective_particles(gp_weights):
@@ -54,6 +56,7 @@ def resample(particles, weights, indexes):
 
 
 def gaussian_process_reg(particles, weights):
+    # GP regression
     kernel = 1.0 * RBF(1.0)
     gp = GaussianProcessRegressor(kernel=kernel, random_state=0)
     gp.fit(particles, weights)
@@ -65,14 +68,3 @@ def gaussian_process_reg(particles, weights):
 
     weights[:] = gp_weights[:]
 
-
-def particle_vis(particles, weights):
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
-    ax.scatter(particles[:, 0], particles[:, 1], weights, marker='o', color='orange')
-
-    ax.set_xlabel('Part X')
-    ax.set_ylabel('Part Y')
-    ax.set_zlabel('Weights')
-
-    plt.show()
