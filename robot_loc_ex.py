@@ -11,7 +11,7 @@ std = (.1, .1)
 dt = 1  # time step
 known_locations = np.array([[-1, 0], [2, 3], [-1, 15]])
 # Test Parameters
-num_of_iterations = 20
+num_of_iterations = 30
 
 particles = pf.create_particles(N=N, x=x_dim, y=y_dim)
 print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
