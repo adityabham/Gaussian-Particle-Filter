@@ -47,5 +47,5 @@ for iteration in range(num_of_iterations):
     print('++++++++++++++++++++++++++++++++++++++++++++++++++++++++')
 
 # Results
-plt.legend([p1, p2], ['Actual', 'GPPF'], loc=4, numpoints=1)
+plt.legend([p1, p2], ['Actual', 'GPPF_matlab_NEU'], loc=4, numpoints=1)
 plt.show()
